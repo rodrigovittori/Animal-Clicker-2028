@@ -1,8 +1,8 @@
 #pgzero
 
 """
-M6.L3: Actividad #8 (Extra) - "Animación de botones"
-Objetivo: Agregar animaciones a los botones de bonificaciones
+M6.L3: Actividad #9 (Extra) - "Incremento de precios"
+Objetivo: Agregar condiciones para que el costo de las bonificaciones aumente
 
 PACK DE ASSETS: 
 ANIMALES: https://kenney.nl/assets/animal-pack-redux 
@@ -25,8 +25,11 @@ fondo = Actor("background")
 animal = Actor("giraffe", (150, 250))
 
 bonus_1 = Actor("bonus", (450, 100))
+bonus_1.precio = 15
 bonus_2 = Actor("bonus", (450, 200))
+bonus_2.precio = 200
 bonus_3 = Actor("bonus", (450, 300))
+bonus_3.precio = 600
 
 boton_jugar = Actor("play", (300, 100))
 
@@ -67,15 +70,15 @@ def draw():
     
         bonus_1.draw()
         screen.draw.text("+1 ☻ cada 2 seg", center = (450, 80), color = "black", fontsize = 20)
-        screen.draw.text("PRECIO: 15 ☻", center = (450, 110), color = "black", fontsize = 20)
+        screen.draw.text(("PRECIO: " + str(bonus_1.precio) + " ☻"), center = (450, 110), color = "black", fontsize = 20)
         
         bonus_2.draw()
         screen.draw.text("+15 ☻ cada 2 seg", center = (450, 180), color = "black", fontsize = 20)
-        screen.draw.text("PRECIO: 200 ☻", center = (450, 210), color = "black", fontsize = 20)
+        screen.draw.text(("PRECIO: " + str(bonus_2.precio) + " ☻"), center = (450, 210), color = "black", fontsize = 20)
 
         bonus_3.draw()
         screen.draw.text("+50 ☻ cada 2 seg", center = (450, 280), color = "black", fontsize = 20)
-        screen.draw.text("PRECIO: 600 ☻", center = (450, 310), color = "black", fontsize = 20)
+        screen.draw.text(("PRECIO: " + str(bonus_3.precio) + " ☻"), center = (450, 310), color = "black", fontsize = 20)
     
 def on_mouse_down(button, pos):
     global puntuacion, modo_actual
@@ -89,11 +92,12 @@ def on_mouse_down(button, pos):
         
         elif bonus_1.collidepoint(pos):
             # Si el click fue sobre el botón de bonus # 1:
-            if (puntuacion >= 15):
+            if (puntuacion >= bonus_1.precio):
                 bonus_1.y = 105
                 animate(bonus_1, tween='bounce_end', duration=0.5, y=100)
                 schedule_interval(el_bonus_1, 2)
-                puntuacion -= 15
+                puntuacion -= bonus_1.precio
+                bonus_1.precio *= 2
             else:
                 bonus_1.x = 445
                 animate(bonus_1, tween='bounce_end', duration=0.25, x=450)
@@ -102,11 +106,12 @@ def on_mouse_down(button, pos):
                 
         elif bonus_2.collidepoint(pos):
             # Si el click fue sobre el botón de bonus # 2:
-            if (puntuacion >= 200):
+            if (puntuacion >= bonus_2.precio):
                 bonus_2.y = 205
                 animate(bonus_2, tween='bounce_end', duration=0.5, y=200)
                 schedule_interval(el_bonus_2, 2)
-                puntuacion -= 200
+                puntuacion -= bonus_2.precio
+                bonus_2.precio *= 2
             else:
                 bonus_2.x = 445
                 animate(bonus_2, tween='bounce_end', duration=0.25, x=450)
@@ -115,11 +120,12 @@ def on_mouse_down(button, pos):
                 
         elif bonus_3.collidepoint(pos):
             # Si el click fue sobre el botón de bonus # 3:
-            if (puntuacion >= 600):
+            if (puntuacion >= bonus_3.precio):
                 bonus_3.y = 305
                 animate(bonus_3, tween='bounce_end', duration=0.5, y=300)
                 schedule_interval(el_bonus_3, 2)
-                puntuacion -= 600
+                puntuacion -= bonus_3.precio
+                bonus_3.precio *= 2
             else:
                 bonus_3.x = 445
                 animate(bonus_3, tween='bounce_end', duration=0.25, x=450)
@@ -144,6 +150,8 @@ def on_key_down(key):
 
     if keyboard.q:
         modo_actual = "menu"
+
+
 
 
 
