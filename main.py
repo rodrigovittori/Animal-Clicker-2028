@@ -1,8 +1,9 @@
 #pgzero
 
 """
-M6.L3: Actividad #3 - "Añadiendo bonificaciones"
-Objetivo: Agregar botones de bonus, (sólo dibujarlos)
+M6.L3: Actividad #4 - "Temporizador"
+Objetivo: Agregar lógica del click en los botones de bonificación pasiva y
+            las invocaciones/llamadas programadas (schedule_interval)
 
 PACK DE ASSETS: 
 ANIMALES: https://kenney.nl/assets/animal-pack-redux 
@@ -16,9 +17,8 @@ TITLE = "Animal Clicker" # Título de la ventana de juego
 FPS = 30 # Fotogramas por segundo
 
 # VARIABLES
-puntuacion = 10000
+puntuacion = 0
 click_mult = 1 # multiplicador del valor por click
-
 
 #OBJETOS
 fondo = Actor("background")
@@ -27,6 +27,22 @@ animal = Actor("giraffe", (150, 250))
 bonus_1 = Actor("bonus", (450, 100))
 bonus_2 = Actor("bonus", (450, 200))
 # To-do: Agregar 3er bonus
+
+""" #####################
+   # FUNCIONES PROPIAS #
+  ##################### """
+
+def el_bonus_1():
+    global puntuacion
+    puntuacion += 1
+
+def el_bonus_2():
+    global puntuacion
+    puntuacion += 15
+
+""" ####################
+   # FUNCIONES PGZERO #
+  #################### """
 
 def draw():
     fondo.draw()
@@ -54,3 +70,27 @@ def on_mouse_down(button, pos):
             puntuacion += click_mult
             animal.y = 200
             animate(animal, tween="bounce_end", duration = 0.5, y = 250)
+        
+        elif bonus_1.collidepoint(pos):
+            # Si el click fue sobre el botón de bonus # 1:
+            if (puntuacion >= 15):
+                schedule_interval(el_bonus_1, 2)
+                puntuacion -= 15
+                
+        elif bonus_2.collidepoint(pos):
+            # Si el click fue sobre el botón de bonus # 2:
+            if (puntuacion >= 200):
+                schedule_interval(el_bonus_2, 2)
+                puntuacion -= 200
+
+######################
+
+def on_key_down(key):
+    global puntuacion
+    
+    if keyboard.d:
+        puntuacion += 500
+        
+    if keyboard.a:
+        puntuacion = 0
+
