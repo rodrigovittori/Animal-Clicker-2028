@@ -1,8 +1,8 @@
 #pgzero
 
 """
-M6.L3: Actividad #9 (Extra) - "Incremento de precios"
-Objetivo: Agregar condiciones para que el costo de las bonificaciones aumente
+M6.L3: Tarea #1 - "Volver al menú"
+Objetivo: Agregar un Actor que al hacerle click nos permita volver al menú principal
 
 PACK DE ASSETS: 
 ANIMALES: https://kenney.nl/assets/animal-pack-redux 
@@ -30,6 +30,8 @@ bonus_2 = Actor("bonus", (450, 200))
 bonus_2.precio = 200
 bonus_3 = Actor("bonus", (450, 300))
 bonus_3.precio = 600
+
+boton_salir = Actor("cross", (WIDTH - 20, 20))
 
 boton_jugar = Actor("play", (300, 100))
 
@@ -79,6 +81,8 @@ def draw():
         bonus_3.draw()
         screen.draw.text("+50 ☻ cada 2 seg", center = (450, 280), color = "black", fontsize = 20)
         screen.draw.text(("PRECIO: " + str(bonus_3.precio) + " ☻"), center = (450, 310), color = "black", fontsize = 20)
+
+        boton_salir.draw()
     
 def on_mouse_down(button, pos):
     global puntuacion, modo_actual
@@ -131,6 +135,10 @@ def on_mouse_down(button, pos):
                 animate(bonus_3, tween='bounce_end', duration=0.25, x=450)
                 bonus_3.x = 455
                 animate(bonus_3, tween='bounce_end', duration=0.25, x=450)
+                
+        elif boton_salir.collidepoint(pos):
+            # Si el click fue sobre el botón de salir:
+            modo_actual = "menu"
 
     elif ((button == mouse.LEFT) and (modo_actual == "menu")):
          if boton_jugar.collidepoint(pos):
@@ -148,8 +156,7 @@ def on_key_down(key):
     if keyboard.a:
         puntuacion = 0
 
-    if keyboard.q:
-        modo_actual = "menu"
+
 
 
 
