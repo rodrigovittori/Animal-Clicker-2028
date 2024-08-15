@@ -1,8 +1,8 @@
 #pgzero
 
 """
-M6.L3: Actividad #5 - "Menú de inicio"
-Objetivo: Crear condiciones para un menú: Actores, lógica y comprobación
+M6.L3: Actividad #7 (Extra) - "Superbonificación"
+Objetivo: Agregar un tercer bonus
 
 PACK DE ASSETS: 
 ANIMALES: https://kenney.nl/assets/animal-pack-redux 
@@ -26,7 +26,7 @@ animal = Actor("giraffe", (150, 250))
 
 bonus_1 = Actor("bonus", (450, 100))
 bonus_2 = Actor("bonus", (450, 200))
-# To-do: Agregar 3er bonus
+bonus_3 = Actor("bonus", (450, 300))
 
 boton_jugar = Actor("play", (300, 100))
 
@@ -41,6 +41,10 @@ def el_bonus_1():
 def el_bonus_2():
     global puntuacion
     puntuacion += 15
+
+def el_bonus_3():
+    global puntuacion
+    puntuacion += 50
 
 """ ####################
    # FUNCIONES PGZERO #
@@ -68,6 +72,10 @@ def draw():
         bonus_2.draw()
         screen.draw.text("+15 ☻ cada 2 seg", center = (450, 180), color = "black", fontsize = 20)
         screen.draw.text("PRECIO: 200 ☻", center = (450, 210), color = "black", fontsize = 20)
+
+        bonus_3.draw()
+        screen.draw.text("+50 ☻ cada 2 seg", center = (450, 280), color = "black", fontsize = 20)
+        screen.draw.text("PRECIO: 600 ☻", center = (450, 310), color = "black", fontsize = 20)
     
 def on_mouse_down(button, pos):
     global puntuacion, modo_actual
@@ -90,6 +98,12 @@ def on_mouse_down(button, pos):
             if (puntuacion >= 200):
                 schedule_interval(el_bonus_2, 2)
                 puntuacion -= 200
+                
+        elif bonus_3.collidepoint(pos):
+            # Si el click fue sobre el botón de bonus # 3:
+            if (puntuacion >= 600):
+                schedule_interval(el_bonus_3, 2)
+                puntuacion -= 600
 
     elif ((button == mouse.LEFT) and (modo_actual == "menu")):
          if boton_jugar.collidepoint(pos):
