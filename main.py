@@ -1,9 +1,8 @@
 #pgzero
 
 """
-M6.L3: Actividad #4 - "Temporizador"
-Objetivo: Agregar lógica del click en los botones de bonificación pasiva y
-            las invocaciones/llamadas programadas (schedule_interval)
+M6.L3: Actividad #5 - "Menú de inicio"
+Objetivo: Crear condiciones para un menú: Actores, lógica y comprobación
 
 PACK DE ASSETS: 
 ANIMALES: https://kenney.nl/assets/animal-pack-redux 
@@ -19,6 +18,7 @@ FPS = 30 # Fotogramas por segundo
 # VARIABLES
 puntuacion = 0
 click_mult = 1 # multiplicador del valor por click
+modo_actual = "menu"
 
 #OBJETOS
 fondo = Actor("background")
@@ -27,6 +27,8 @@ animal = Actor("giraffe", (150, 250))
 bonus_1 = Actor("bonus", (450, 100))
 bonus_2 = Actor("bonus", (450, 200))
 # To-do: Agregar 3er bonus
+
+boton_jugar = Actor("play", (300, 100))
 
 """ #####################
    # FUNCIONES PROPIAS #
@@ -45,26 +47,32 @@ def el_bonus_2():
   #################### """
 
 def draw():
-    fondo.draw()
-    animal.draw()
-    # Dibujamos puntuacion
-    # To-do: Agregar control que chequee que el texto no se salga de la pantalla (ajusta vble fontsize) 
-    screen.draw.text((str(puntuacion) + "🙃"), center=(150, 70), color="white", fontsize = 96)
 
-    # Dibujamos botones bonus
-
-    bonus_1.draw()
-    screen.draw.text("+1 ☻ cada 2 seg", center = (450, 80), color = "black", fontsize = 20)
-    screen.draw.text("PRECIO: 15 ☻", center = (450, 110), color = "black", fontsize = 20)
+    if (modo_actual == "menu"):
+        fondo.draw()
+        boton_jugar.draw()
+        
+    elif (modo_actual == "juego"):
+        fondo.draw()
+        animal.draw()
+        # Dibujamos puntuacion
+        # To-do: Agregar control que chequee que el texto no se salga de la pantalla (ajusta vble fontsize) 
+        screen.draw.text((str(puntuacion) + "🙃"), center=(150, 70), color="white", fontsize = 96)
     
-    bonus_2.draw()
-    screen.draw.text("+15 ☻ cada 2 seg", center = (450, 180), color = "black", fontsize = 20)
-    screen.draw.text("PRECIO: 200 ☻", center = (450, 210), color = "black", fontsize = 20)
+        # Dibujamos botones bonus
+    
+        bonus_1.draw()
+        screen.draw.text("+1 ☻ cada 2 seg", center = (450, 80), color = "black", fontsize = 20)
+        screen.draw.text("PRECIO: 15 ☻", center = (450, 110), color = "black", fontsize = 20)
+        
+        bonus_2.draw()
+        screen.draw.text("+15 ☻ cada 2 seg", center = (450, 180), color = "black", fontsize = 20)
+        screen.draw.text("PRECIO: 200 ☻", center = (450, 210), color = "black", fontsize = 20)
     
 def on_mouse_down(button, pos):
-    global puntuacion
+    global puntuacion, modo_actual
     
-    if (button == mouse.LEFT):
+    if ((button == mouse.LEFT) and (modo_actual == "juego")):
 
         if animal.collidepoint(pos):
             puntuacion += click_mult
@@ -83,14 +91,26 @@ def on_mouse_down(button, pos):
                 schedule_interval(el_bonus_2, 2)
                 puntuacion -= 200
 
+    elif ((button == mouse.LEFT) and (modo_actual == "menu")):
+         if boton_jugar.collidepoint(pos):
+             # Si el click fue sobre el boton "Jugar":
+            modo_actual = "juego"
+
 ######################
 
 def on_key_down(key):
-    global puntuacion
+    global puntuacion, modo_actual
     
     if keyboard.d:
         puntuacion += 500
         
     if keyboard.a:
         puntuacion = 0
+
+    if keyboard.q:
+        modo_actual = "menu"
+
+
+
+
 
