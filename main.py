@@ -1,8 +1,8 @@
 #pgzero
 
 """
-M6.L3: Actividad #7 (Extra) - "Superbonificación"
-Objetivo: Agregar un tercer bonus
+M6.L3: Actividad #8 (Extra) - "Animación de botones"
+Objetivo: Agregar animaciones a los botones de bonificaciones
 
 PACK DE ASSETS: 
 ANIMALES: https://kenney.nl/assets/animal-pack-redux 
@@ -90,20 +90,41 @@ def on_mouse_down(button, pos):
         elif bonus_1.collidepoint(pos):
             # Si el click fue sobre el botón de bonus # 1:
             if (puntuacion >= 15):
+                bonus_1.y = 105
+                animate(bonus_1, tween='bounce_end', duration=0.5, y=100)
                 schedule_interval(el_bonus_1, 2)
                 puntuacion -= 15
+            else:
+                bonus_1.x = 445
+                animate(bonus_1, tween='bounce_end', duration=0.25, x=450)
+                bonus_1.x = 455
+                animate(bonus_1, tween='bounce_end', duration=0.25, x=450)
                 
         elif bonus_2.collidepoint(pos):
             # Si el click fue sobre el botón de bonus # 2:
             if (puntuacion >= 200):
+                bonus_2.y = 205
+                animate(bonus_2, tween='bounce_end', duration=0.5, y=200)
                 schedule_interval(el_bonus_2, 2)
                 puntuacion -= 200
+            else:
+                bonus_2.x = 445
+                animate(bonus_2, tween='bounce_end', duration=0.25, x=450)
+                bonus_2.x = 455
+                animate(bonus_2, tween='bounce_end', duration=0.25, x=450)
                 
         elif bonus_3.collidepoint(pos):
             # Si el click fue sobre el botón de bonus # 3:
             if (puntuacion >= 600):
+                bonus_3.y = 305
+                animate(bonus_3, tween='bounce_end', duration=0.5, y=300)
                 schedule_interval(el_bonus_3, 2)
                 puntuacion -= 600
+            else:
+                bonus_3.x = 445
+                animate(bonus_3, tween='bounce_end', duration=0.25, x=450)
+                bonus_3.x = 455
+                animate(bonus_3, tween='bounce_end', duration=0.25, x=450)
 
     elif ((button == mouse.LEFT) and (modo_actual == "menu")):
          if boton_jugar.collidepoint(pos):
@@ -123,6 +144,8 @@ def on_key_down(key):
 
     if keyboard.q:
         modo_actual = "menu"
+
+
 
 
 
