@@ -27,10 +27,18 @@ animal = Actor("giraffe", (150, 250))
 
 bonus_1 = Actor("bonus", (450, 100))
 bonus_1.precio = 15
+bonus_1.potenciador = 1
+bonus_1.ya_activado = False
+
 bonus_2 = Actor("bonus", (450, 200))
 bonus_2.precio = 200
+bonus_2.potenciador = 15
+bonus_2.ya_activado = False
+
 bonus_3 = Actor("bonus", (450, 300))
 bonus_3.precio = 600
+bonus_3.potenciador = 50
+bonus_3.ya_activado = False
 
 boton_salir = Actor("cross", (WIDTH - 20, 20))
 boton_jugar =     Actor("play", (300, 100))
@@ -44,15 +52,15 @@ boton_coleccion = Actor("coleccion", (300, 300))
 
 def el_bonus_1():
     global puntuacion
-    puntuacion += 1
+    puntuacion += bonus_1.potenciador
 
 def el_bonus_2():
     global puntuacion
-    puntuacion += 15
+    puntuacion += bonus_2.potenciador
 
 def el_bonus_3():
     global puntuacion
-    puntuacion += 50
+    puntuacion += bonus_3.potenciador
 
 """ ####################
    # FUNCIONES PGZERO #
@@ -102,40 +110,65 @@ def on_mouse_down(button, pos):
         elif bonus_1.collidepoint(pos):
             # Si el click fue sobre el botón de bonus # 1:
             if (puntuacion >= bonus_1.precio):
-                bonus_1.y = 105
-                animate(bonus_1, tween='bounce_end', duration=0.5, y=100)
-                schedule_interval(el_bonus_1, 2)
+                # Chequeamos si ya está activo
+                if (not bonus_1.ya_activado):
+                    schedule_interval(el_bonus_1, 2)
+                    bonus_1.ya_activado = True
+                else:
+                    bonus_1.potenciador += 1
+                    
                 puntuacion -= bonus_1.precio
                 bonus_1.precio *= 2
+
+                bonus_1.y = 105
+                animate(bonus_1, tween='bounce_end', duration=0.5, y=100)
             else:
+                # Si no tiene suficientes puntos para comprarlo
                 bonus_1.x = 445
                 animate(bonus_1, tween='bounce_end', duration=0.25, x=450)
                 bonus_1.x = 455
                 animate(bonus_1, tween='bounce_end', duration=0.25, x=450)
-                
+            
         elif bonus_2.collidepoint(pos):
             # Si el click fue sobre el botón de bonus # 2:
             if (puntuacion >= bonus_2.precio):
-                bonus_2.y = 205
-                animate(bonus_2, tween='bounce_end', duration=0.5, y=200)
-                schedule_interval(el_bonus_2, 2)
+                # Chequeamos si ya está activo
+                if (not bonus_2.ya_activado):
+                    schedule_interval(el_bonus_2, 2)
+                    bonus_2.ya_activado = True
+                else:
+                    bonus_2.potenciador += 15
+                    
                 puntuacion -= bonus_2.precio
                 bonus_2.precio *= 2
+
+                bonus_2.y = 205
+                animate(bonus_2, tween='bounce_end', duration=0.5, y=200)
             else:
+                # Si no tiene suficientes puntos para comprarlo
                 bonus_2.x = 445
                 animate(bonus_2, tween='bounce_end', duration=0.25, x=450)
                 bonus_2.x = 455
                 animate(bonus_2, tween='bounce_end', duration=0.25, x=450)
+        
                 
         elif bonus_3.collidepoint(pos):
             # Si el click fue sobre el botón de bonus # 3:
             if (puntuacion >= bonus_3.precio):
-                bonus_3.y = 305
-                animate(bonus_3, tween='bounce_end', duration=0.5, y=300)
-                schedule_interval(el_bonus_3, 2)
+                # Chequeamos si ya está activo
+                if (not bonus_3.ya_activado):
+                    schedule_interval(el_bonus_3, 2)
+                    bonus_3.ya_activado = True
+                else:
+                    bonus_3.potenciador += 50
+                    
                 puntuacion -= bonus_3.precio
                 bonus_3.precio *= 2
+
+                bonus_3.y = 305
+                animate(bonus_3, tween='bounce_end', duration=0.5, y=300)
             else:
+                # Si no tiene suficientes puntos para comprarlo
                 bonus_3.x = 445
                 animate(bonus_3, tween='bounce_end', duration=0.25, x=450)
                 bonus_3.x = 455
