@@ -1,14 +1,13 @@
 #pgzero
 
 """
-M6.L4: Actividad # 1 - "Tienda"
-Objetivo: Poder ingresar a la tienda y mostrar los nuevos actores y sus precios
-NOTA: NO implementamos lógica de sino a partir de la próxima actividad
+M6.L4: Actividad # 2 - "Compra de skins"
+Objetivo: Poder comprar y cambiar las skins del personaje
+NOTA: NO implementamos lógica de la colección de skins de sino a partir de la próxima actividad
 
-*Argregamos los actores nuevos
-*Agregamos en draw el modo tienda y colección
-*Agregamos on_mouse_down() la logica de los clicks para entrar a los nuevos modos y volver al menu ppal
-*ajustamos tamaño puntuacion
+** Agregamos listas de skins y coleccion completa
+** Actualizamos los draw en caso de tienda y de colección
+** Agregamos la lógica de compras de skins
 
 PACK DE ASSETS: 
 ANIMALES: https://kenney.nl/assets/animal-pack-redux 
@@ -32,7 +31,9 @@ fondo = Actor("background")
 animal = Actor("giraffe", (150, 250))
 
 cocodrilo = Actor("crocodile", (120, 200))
+cocodrilo.precio = 500
 hipopotamo = Actor("hippo", (300, 200))
+hipopotamo.precio = 2500
 
 bonus_1 = Actor("bonus", (450, 100))
 bonus_1.precio = 15
@@ -54,6 +55,12 @@ boton_jugar =     Actor("play", (300, 100))
 boton_tienda =    Actor("tienda", (300, 200))
 boton_coleccion = Actor("coleccion", (300, 300))
 
+# Listas skins
+coleccion_skins = []
+
+coleccion_completa = [] # lista que contiene todas las skins desbloqueables por el jugador
+coleccion_completa.append(cocodrilo)
+coleccion_completa.append(hipopotamo)
 
 """ #####################
    # FUNCIONES PROPIAS #
@@ -120,13 +127,18 @@ def draw():
     elif (modo_actual == "tienda"):
         fondo.draw()
         # Dibujar Skins desbloqueables - ( lo vamos a modificar más adelante)
-            
-        cocodrilo.draw()
-        hipopotamo.draw()
-            
-        # mostramos precios skins
-        screen.draw.text("500 ☻", center=(cocodrilo.x, 300), color = "white" , fontsize = 36)
-        screen.draw.text("2500 ☻", center=(hipopotamo.x, 300), color = "white" , fontsize = 36)
+
+        if coleccion_skins == coleccion_completa:
+            # Si ya desbloqueamos TODAS las skins
+            screen.draw.text("¡FELICIDADES!", center=(WIDTH/2, HEIGHT/3), color = "white", background = "black" , fontsize = 42)
+            screen.draw.text("Has adquirido todas las skins", center=(WIDTH/2, HEIGHT/3*2), color = "white", background = "black" , fontsize = 32)
+
+        else:
+            for skin in coleccion_completa:
+                if skin not in coleccion_skins:
+                    # Si NO la hemos adquirido:
+                    skin.draw()
+                    screen.draw.text((str(skin.precio) + " ☻"), center=(skin.x, 300), color = "white" , fontsize = 36)
             
         # Dibujamos puntuacion
         screen.draw.text(str(puntuacion) + "☻", center=(150, 70), color="white", fontsize = tam_fuente_punt)
@@ -138,14 +150,32 @@ def draw():
         fondo.draw()
         # Dibujamos puntuacion
         screen.draw.text(str(puntuacion) + "☻", center=(150, 70), color="white", fontsize = tam_fuente_punt)
-                
+
+        # Dibujar Skins desbloqueables - ( lo vamos a modificar más adelante)
+
+       # Mostramos las skins desbloqueadas
+        for skin in coleccion_skins:
+            skin.draw()
+            
+        # Dibujar ? para las NO-desbloqueadas
+        
+        for skin in coleccion_completa:
+            if skin not in coleccion_skins:
+               screen.draw.text("?", center=(skin.pos), color = "white" , fontsize = 96)
+        
+        # mostramos habilidades/multiplicadores skins
+        screen.draw.text("2x ☻", center=(cocodrilo.x, 300), color = "white" , fontsize = 36)
+        screen.draw.text("3x ☻", center=(hipopotamo.x, 300), color = "white" , fontsize = 36)
+         
         # Dibujamos botón salir:
         boton_salir.draw()
-        
+
+
 def on_mouse_down(button, pos):
-    global puntuacion, modo_actual
+    global puntuacion, modo_actual, click_mult
 
     actualizar_tam_fuente_punt()
+    
     if ((button == mouse.LEFT) and (modo_actual == "juego")): 
         if animal.collidepoint(pos):
             puntuacion += click_mult
@@ -247,11 +277,26 @@ def on_mouse_down(button, pos):
             # Si el click fue sobre el botón "Salir":
             modo_actual = "menu"
             
+        elif (cocodrilo.collidepoint(pos)) and (puntuacion >= cocodrilo.precio) and (cocodrilo not in coleccion_skins):
+            # Si el click fue sobre el cocodrilo:
+            puntuacion -= cocodrilo.precio
+            coleccion_skins.append(cocodrilo)
+            click_mult = 2
+            animal.image = "crocodile"
+          
+        elif hipopotamo.collidepoint(pos) and (puntuacion >= hipopotamo.precio) and (hipopotamo not in coleccion_skins):
+            puntuacion -= hipopotamo.precio
+            coleccion_skins.append(hipopotamo)
+            click_mult = 3
+            animal.image = "hippo"
+            
     elif (button == mouse.LEFT) and (modo_actual == "coleccion"):
             
         if (boton_salir.collidepoint(pos)):
             # Si el click fue sobre el botón "Salir":
             modo_actual = "menu"
+
+        # Nota: en esta actividad todavia no configuramos la coleccion...
     
 ######################
 
