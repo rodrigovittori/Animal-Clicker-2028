@@ -1,13 +1,10 @@
 #pgzero
 
 """
-M6.L4: Actividad # 2 - "Compra de skins"
-Objetivo: Poder comprar y cambiar las skins del personaje
-NOTA: NO implementamos lógica de la colección de skins de sino a partir de la próxima actividad
+M6.L4: Actividad # 3 - "Colección"
+Objetivo: Poder cambiar las skins del personaje por las que ya tengamos desbloqueadas
 
-** Agregamos listas de skins y coleccion completa
-** Actualizamos los draw en caso de tienda y de colección
-** Agregamos la lógica de compras de skins
+** Agregamos lilógica de cambio de skin en colección
 
 PACK DE ASSETS: 
 ANIMALES: https://kenney.nl/assets/animal-pack-redux 
@@ -272,7 +269,9 @@ def on_mouse_down(button, pos):
              modo_actual = "coleccion"
 
     elif (button == mouse.LEFT) and (modo_actual == "tienda"):
-            
+
+        # Agregar animaciones cuando el saldo es insuficiente para comprar
+        
         if (boton_salir.collidepoint(pos)):
             # Si el click fue sobre el botón "Salir":
             modo_actual = "menu"
@@ -291,20 +290,32 @@ def on_mouse_down(button, pos):
             animal.image = "hippo"
             
     elif (button == mouse.LEFT) and (modo_actual == "coleccion"):
-            
+
+        # Agregar animaciones al seleccionar una skin
+        
         if (boton_salir.collidepoint(pos)):
             # Si el click fue sobre el botón "Salir":
             modo_actual = "menu"
 
-        # Nota: en esta actividad todavia no configuramos la coleccion...
+        elif (cocodrilo.collidepoint(pos)) and (cocodrilo in coleccion_skins):
+            click_mult = 2
+            animal.image = "crocodile"
+            
+        elif (hipopotamo.collidepoint(pos)) and (hipopotamo in coleccion_skins):
+            click_mult = 3
+            animal.image = "hippo"
     
 ######################
 
 def on_key_down(key):
-    global puntuacion, modo_actual
+    global puntuacion, modo_actual, click_mult
     
     if keyboard.d:
         puntuacion += 500
         
     if keyboard.a:
         puntuacion = 0
+    
+    if keyboard.j:
+        animal.image = "giraffe"
+        click_mult = 1
