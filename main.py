@@ -1,14 +1,8 @@
 #pgzero
 
 """
-M6.L4: Actividad # 4 - "Morsa"
-Objetivo: Agregar un nuevo actor...
-
-1º Lo creamos
-2º Le asignamos precio y potenciador de click
-3º Lo agregamos a la lista coleccion_completa
-4º En on_mouse_down, en modo tienda: agregamos la lógica para comprarlo
-5º En on_mouse_down, en modo coleccion: agregamos la lógica para seleccionarlo
+M6.L4: Actividad 6 (Extra) - "Animación de las skins"
+Objetivo: Agregar animaciones...
 
 PACK DE ASSETS: 
 ANIMALES: https://kenney.nl/assets/animal-pack-redux 
@@ -278,31 +272,52 @@ def on_mouse_down(button, pos):
              modo_actual = "coleccion"
 
     elif (button == mouse.LEFT) and (modo_actual == "tienda"):
-
-        # Agregar animaciones cuando el saldo es insuficiente para comprar
         
         if (boton_salir.collidepoint(pos)):
             # Si el click fue sobre el botón "Salir":
             modo_actual = "menu"
-            
-        elif (cocodrilo.collidepoint(pos)) and (puntuacion >= cocodrilo.precio) and (cocodrilo not in coleccion_skins):
-            # Si el click fue sobre el cocodrilo:
-            puntuacion -= cocodrilo.precio
-            coleccion_skins.append(cocodrilo)
-            click_mult = 2
-            animal.image = "crocodile"
-          
-        elif hipopotamo.collidepoint(pos) and (puntuacion >= hipopotamo.precio) and (hipopotamo not in coleccion_skins):
-            puntuacion -= hipopotamo.precio
-            coleccion_skins.append(hipopotamo)
-            click_mult = 3
-            animal.image = "hippo"
+        
+        elif (cocodrilo.collidepoint(pos)):
+            if (puntuacion >= cocodrilo.precio) and (cocodrilo not in coleccion_skins):
+                # Si puedo comprarlo:
+                puntuacion -= cocodrilo.precio
+                coleccion_skins.append(cocodrilo)
+                click_mult = 2
+                animal.image = "crocodile"
+            else:
+                # NO PUEDO COMPRARLO
+                cocodrilo.x = 110
+                animate(cocodrilo, tween="bounce_start", duration = 0.2, x = 120)
+                cocodrilo.x = 130
+                animate(cocodrilo, tween="bounce_end", duration = 0.2, x = 120)
+        
+        elif (hipopotamo.collidepoint(pos)):
+            if (puntuacion >= hipopotamo.precio) and (hipopotamo not in coleccion_skins):
+                # Si puedo comprarlo:
+                puntuacion -= hipopotamo.precio
+                coleccion_skins.append(hipopotamo)
+                click_mult = 3
+                animal.image = "hippo"
+            else:
+                # NO PUEDO COMPRARLO
+                hipopotamo.x = 290
+                animate(hipopotamo, tween="bounce_start", duration = 0.2, x = 300)
+                hipopotamo.x = 310
+                animate(hipopotamo, tween="bounce_end", duration = 0.2, x = 300)
 
-        elif morsa.collidepoint(pos) and (puntuacion >= morsa.precio) and (morsa not in coleccion_skins):
-            puntuacion -= morsa.precio
-            coleccion_skins.append(morsa)
-            click_mult = 4
-            animal.image = "walrus"
+        elif (morsa.collidepoint(pos)):
+            if (puntuacion >= morsa.precio) and (morsa not in coleccion_skins):
+                # Si puedo comprarlo:
+                puntuacion -= morsa.precio
+                coleccion_skins.append(morsa)
+                click_mult = 4
+                animal.image = "walrus"
+            else:
+                # NO PUEDO COMPRARLO
+                morsa.x = 470
+                animate(morsa, tween="bounce_start", duration = 0.2, x = 480)
+                morsa.x = 490
+                animate(morsa, tween="bounce_end", duration = 0.2, x = 480)
             
     elif (button == mouse.LEFT) and (modo_actual == "coleccion"):
 
@@ -313,14 +328,20 @@ def on_mouse_down(button, pos):
             modo_actual = "menu"
 
         elif (cocodrilo.collidepoint(pos)) and (cocodrilo in coleccion_skins):
+            cocodrilo.y = 180
+            animate(cocodrilo, tween="bounce_end", duration = 0.5, y = 200)
             click_mult = 2
             animal.image = "crocodile"
             
         elif (hipopotamo.collidepoint(pos)) and (hipopotamo in coleccion_skins):
+            hipopotamo.y = 180
+            animate(hipopotamo, tween="bounce_end", duration = 0.5, y = 200)
             click_mult = 3
             animal.image = "hippo"
 
         elif (morsa.collidepoint(pos)) and (morsa in coleccion_skins):
+            morsa.y = 180
+            animate(morsa, tween="bounce_end", duration = 0.5, y = 200)
             click_mult = 4
             animal.image = "walrus"
     
