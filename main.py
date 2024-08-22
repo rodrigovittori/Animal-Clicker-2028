@@ -1,10 +1,14 @@
 #pgzero
 
 """
-M6.L4: Actividad # 3 - "Colección"
-Objetivo: Poder cambiar las skins del personaje por las que ya tengamos desbloqueadas
+M6.L4: Actividad # 4 - "Morsa"
+Objetivo: Agregar un nuevo actor...
 
-** Agregamos lilógica de cambio de skin en colección
+1º Lo creamos
+2º Le asignamos precio y potenciador de click
+3º Lo agregamos a la lista coleccion_completa
+4º En on_mouse_down, en modo tienda: agregamos la lógica para comprarlo
+5º En on_mouse_down, en modo coleccion: agregamos la lógica para seleccionarlo
 
 PACK DE ASSETS: 
 ANIMALES: https://kenney.nl/assets/animal-pack-redux 
@@ -29,8 +33,12 @@ animal = Actor("giraffe", (150, 250))
 
 cocodrilo = Actor("crocodile", (120, 200))
 cocodrilo.precio = 500
+
 hipopotamo = Actor("hippo", (300, 200))
 hipopotamo.precio = 2500
+
+morsa = Actor("walrus", (480, 200))
+morsa.precio = 7000
 
 bonus_1 = Actor("bonus", (450, 100))
 bonus_1.precio = 15
@@ -58,6 +66,7 @@ coleccion_skins = []
 coleccion_completa = [] # lista que contiene todas las skins desbloqueables por el jugador
 coleccion_completa.append(cocodrilo)
 coleccion_completa.append(hipopotamo)
+coleccion_completa.append(morsa)
 
 """ #####################
    # FUNCIONES PROPIAS #
@@ -123,7 +132,6 @@ def draw():
 
     elif (modo_actual == "tienda"):
         fondo.draw()
-        # Dibujar Skins desbloqueables - ( lo vamos a modificar más adelante)
 
         if coleccion_skins == coleccion_completa:
             # Si ya desbloqueamos TODAS las skins
@@ -163,6 +171,7 @@ def draw():
         # mostramos habilidades/multiplicadores skins
         screen.draw.text("2x ☻", center=(cocodrilo.x, 300), color = "white" , fontsize = 36)
         screen.draw.text("3x ☻", center=(hipopotamo.x, 300), color = "white" , fontsize = 36)
+        screen.draw.text("4x ☻", center=(morsa.x, 300), color = "white" , fontsize = 36)
          
         # Dibujamos botón salir:
         boton_salir.draw()
@@ -288,6 +297,12 @@ def on_mouse_down(button, pos):
             coleccion_skins.append(hipopotamo)
             click_mult = 3
             animal.image = "hippo"
+
+        elif morsa.collidepoint(pos) and (puntuacion >= morsa.precio) and (morsa not in coleccion_skins):
+            puntuacion -= morsa.precio
+            coleccion_skins.append(morsa)
+            click_mult = 4
+            animal.image = "walrus"
             
     elif (button == mouse.LEFT) and (modo_actual == "coleccion"):
 
@@ -304,6 +319,10 @@ def on_mouse_down(button, pos):
         elif (hipopotamo.collidepoint(pos)) and (hipopotamo in coleccion_skins):
             click_mult = 3
             animal.image = "hippo"
+
+        elif (morsa.collidepoint(pos)) and (morsa in coleccion_skins):
+            click_mult = 4
+            animal.image = "walrus"
     
 ######################
 
