@@ -1,9 +1,14 @@
 #pgzero
 
 """
-M6.L3: Tarea #2 - "Dos nuevos botones"
-Objetivo: Agregar botones (en el menú principal) para los modos "tienda" y "coleccion"
-NOTA: NO implementamos lógica sino a partir de la próxima clase
+M6.L4: Actividad # 1 - "Tienda"
+Objetivo: Poder ingresar a la tienda y mostrar los nuevos actores y sus precios
+NOTA: NO implementamos lógica de sino a partir de la próxima actividad
+
+*Argregamos los actores nuevos
+*Agregamos en draw el modo tienda y colección
+*Agregamos on_mouse_down() la logica de los clicks para entrar a los nuevos modos y volver al menu ppal
+*ajustamos tamaño puntuacion
 
 PACK DE ASSETS: 
 ANIMALES: https://kenney.nl/assets/animal-pack-redux 
@@ -20,10 +25,14 @@ FPS = 30 # Fotogramas por segundo
 puntuacion = 0
 click_mult = 1 # multiplicador del valor por click
 modo_actual = "menu"
+tam_fuente_punt = 96
 
 #OBJETOS
 fondo = Actor("background")
 animal = Actor("giraffe", (150, 250))
+
+cocodrilo = Actor("crocodile", (120, 200))
+hipopotamo = Actor("hippo", (300, 200))
 
 bonus_1 = Actor("bonus", (450, 100))
 bonus_1.precio = 15
@@ -40,7 +49,7 @@ bonus_3.precio = 600
 bonus_3.potenciador = 50
 bonus_3.ya_activado = False
 
-boton_salir = Actor("cross", (WIDTH - 20, 20))
+boton_salir =     Actor("cross", (WIDTH - 20, 20))
 boton_jugar =     Actor("play", (300, 100))
 boton_tienda =    Actor("tienda", (300, 200))
 boton_coleccion = Actor("coleccion", (300, 300))
@@ -62,6 +71,17 @@ def el_bonus_3():
     global puntuacion
     puntuacion += bonus_3.potenciador
 
+def actualizar_tam_fuente_punt():
+  global tam_fuente_punt
+
+  # Ajustar el tamaño de la fuente según el tamaño de la puntuación
+  if puntuacion < 1000:
+    tam_fuente_punt = 96
+  elif puntuacion < 10000:
+    tam_fuente_punt = 72
+  else:
+    tam_fuente_punt = 48
+
 """ ####################
    # FUNCIONES PGZERO #
   #################### """
@@ -79,29 +99,54 @@ def draw():
         animal.draw()
         # Dibujamos puntuacion
         # To-do: Agregar control que chequee que el texto no se salga de la pantalla (ajusta vble fontsize) 
-        screen.draw.text((str(puntuacion) + "🙃"), center=(150, 70), color="white", fontsize = 96)
+        screen.draw.text((str(puntuacion) + "🙃"), center=(150, 70), color="white", fontsize = tam_fuente_punt)
     
         # Dibujamos botones bonus
     
         bonus_1.draw()
-        screen.draw.text("+1 ☻ cada 2 seg", center = (450, 80), color = "black", fontsize = 20)
+        screen.draw.text("+" + str(bonus_1.potenciador) + " ☻ cada 2 seg", center = (450, 80), color = "black", fontsize = 20)
         screen.draw.text(("PRECIO: " + str(bonus_1.precio) + " ☻"), center = (450, 110), color = "black", fontsize = 20)
         
         bonus_2.draw()
-        screen.draw.text("+15 ☻ cada 2 seg", center = (450, 180), color = "black", fontsize = 20)
+        screen.draw.text("+" + str(bonus_2.potenciador) + " ☻ cada 2 seg", center = (450, 180), color = "black", fontsize = 20)
         screen.draw.text(("PRECIO: " + str(bonus_2.precio) + " ☻"), center = (450, 210), color = "black", fontsize = 20)
 
         bonus_3.draw()
-        screen.draw.text("+50 ☻ cada 2 seg", center = (450, 280), color = "black", fontsize = 20)
+        screen.draw.text("+" + str(bonus_3.potenciador) + " ☻ cada 2 seg", center = (450, 280), color = "black", fontsize = 20)
         screen.draw.text(("PRECIO: " + str(bonus_3.precio) + " ☻"), center = (450, 310), color = "black", fontsize = 20)
 
         boton_salir.draw()
-    
+
+    elif (modo_actual == "tienda"):
+        fondo.draw()
+        # Dibujar Skins desbloqueables - ( lo vamos a modificar más adelante)
+            
+        cocodrilo.draw()
+        hipopotamo.draw()
+            
+        # mostramos precios skins
+        screen.draw.text("500 ☻", center=(cocodrilo.x, 300), color = "white" , fontsize = 36)
+        screen.draw.text("2500 ☻", center=(hipopotamo.x, 300), color = "white" , fontsize = 36)
+            
+        # Dibujamos puntuacion
+        screen.draw.text(str(puntuacion) + "☻", center=(150, 70), color="white", fontsize = tam_fuente_punt)
+            
+        # Dibujamos botón salir:
+        boton_salir.draw()
+        
+    elif (modo_actual == "coleccion"):
+        fondo.draw()
+        # Dibujamos puntuacion
+        screen.draw.text(str(puntuacion) + "☻", center=(150, 70), color="white", fontsize = tam_fuente_punt)
+                
+        # Dibujamos botón salir:
+        boton_salir.draw()
+        
 def on_mouse_down(button, pos):
     global puntuacion, modo_actual
-    
-    if ((button == mouse.LEFT) and (modo_actual == "juego")):
 
+    actualizar_tam_fuente_punt()
+    if ((button == mouse.LEFT) and (modo_actual == "juego")): 
         if animal.collidepoint(pos):
             puntuacion += click_mult
             animal.y = 200
@@ -150,7 +195,6 @@ def on_mouse_down(button, pos):
                 animate(bonus_2, tween='bounce_end', duration=0.25, x=450)
                 bonus_2.x = 455
                 animate(bonus_2, tween='bounce_end', duration=0.25, x=450)
-        
                 
         elif bonus_3.collidepoint(pos):
             # Si el click fue sobre el botón de bonus # 3:
@@ -181,8 +225,34 @@ def on_mouse_down(button, pos):
     elif ((button == mouse.LEFT) and (modo_actual == "menu")):
          if boton_jugar.collidepoint(pos):
              # Si el click fue sobre el boton "Jugar":
-            modo_actual = "juego"
+             boton_jugar.y = 105
+             animate(boton_jugar, tween='bounce_end', duration=0.5, y=100)
+             modo_actual = "juego"
+         
+         elif boton_tienda.collidepoint(pos):
+             # Si el click fue sobre el boton "Tienda":
+             boton_tienda.y = 205
+             animate(boton_tienda, tween='bounce_end', duration=0.5, y=200)
+             modo_actual = "tienda"
+         
+         elif boton_coleccion.collidepoint(pos):
+             # Si el click fue sobre el boton "COLECCION":
+             boton_coleccion.y = 305
+             animate(boton_coleccion, tween='bounce_end', duration=0.5, y=300)
+             modo_actual = "coleccion"
 
+    elif (button == mouse.LEFT) and (modo_actual == "tienda"):
+            
+        if (boton_salir.collidepoint(pos)):
+            # Si el click fue sobre el botón "Salir":
+            modo_actual = "menu"
+            
+    elif (button == mouse.LEFT) and (modo_actual == "coleccion"):
+            
+        if (boton_salir.collidepoint(pos)):
+            # Si el click fue sobre el botón "Salir":
+            modo_actual = "menu"
+    
 ######################
 
 def on_key_down(key):
